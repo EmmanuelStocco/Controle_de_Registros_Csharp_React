@@ -68,12 +68,12 @@ const PessoaList: React.FC<PessoaListProps> = ({ apiVersion }) => {
       {pessoas.length === 0 ? (
         <div className="empty-state">
           <p>Nenhuma pessoa cadastrada.</p>
-          <button
+          {/* <button
             className="btn btn-primary"
             onClick={() => navigate('/pessoa/new')}
           >
             Cadastrar primeira pessoa
-          </button>
+          </button> */}
         </div>
       ) : (
         <div className="table-container">

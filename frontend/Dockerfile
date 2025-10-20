@@ -4,10 +4,17 @@ WORKDIR /app
 
 # Copiar package files
 COPY package*.json ./
-RUN npm ci --only=production
+
+# Instalar dependências (inclui devDependencies para o build)
+RUN npm install
 
 # Copiar código fonte e fazer build
 COPY . .
+
+# Permitir injetar URL da API no build, se necessário
+ARG REACT_APP_API_URL
+ENV REACT_APP_API_URL=$REACT_APP_API_URL
+
 RUN npm run build
 
 # Production Stage com Nginx
