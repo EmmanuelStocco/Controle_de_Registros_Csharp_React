@@ -7,8 +7,26 @@ using PessoaAPI.Services;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
- 
-builder.WebHost.UseUrls("http://localhost:5000", "https://localhost:5001"); 
+
+// Configuração de URLs - só usa porta 80 se estiver em container Docker
+var runningInDocker = Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true";
+var portEnv = Environment.GetEnvironmentVariable("PORT");
+
+if (runningInDocker && portEnv != null)
+{
+    // Rodando em Docker/Container - usa porta do ambiente
+    builder.WebHost.UseUrls($"http://0.0.0.0:{portEnv}");
+}
+else if (runningInDocker)
+{
+    // Rodando em Docker sem PORT definida
+    builder.WebHost.UseUrls("http://0.0.0.0:80");
+}
+else
+{
+    // Rodando localmente - sempre usa localhost:5000
+    builder.WebHost.UseUrls("http://localhost:5000", "https://localhost:5001");
+} 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -90,7 +108,13 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp", policy =>
     {
-        policy.WithOrigins("http://localhost:3000", "https://localhost:3000")
+        // Em produção, permite origens configuradas via variável de ambiente
+        var allowedOrigins = builder.Configuration.GetValue<string>("AllowedOrigins")
+            ?? "http://localhost:3000,https://localhost:3000";
+        
+        var origins = allowedOrigins.Split(',', StringSplitOptions.RemoveEmptyEntries);
+        
+        policy.WithOrigins(origins)
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();

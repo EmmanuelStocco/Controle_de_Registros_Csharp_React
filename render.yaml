@@ -1,0 +1,31 @@
+services:
+  # Backend API
+  - type: web
+    name: pessoa-api
+    env: docker
+    dockerfilePath: ./backend/PessoaAPI/Dockerfile
+    dockerContext: ./backend/PessoaAPI
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: ASPNETCORE_URLS
+        value: http://+:80
+      - key: AllowedOrigins
+        value: https://pessoa-frontend.onrender.com
+      - key: Jwt__Key
+        generateValue: true
+      - key: Jwt__Issuer
+        value: PessoaAPI
+      - key: Jwt__Audience
+        value: PessoaAPIUsers
+
+  # Frontend React
+  - type: web
+    name: pessoa-frontend
+    env: static
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: ./frontend/build
+    envVars:
+      - key: REACT_APP_API_URL
+        value: https://pessoa-api.onrender.com
+

@@ -1,6 +1,6 @@
 # Sistema de Cadastro de Pessoas
 
-Sistema completo de cadastro de pessoas desenvolvido com .NET 6 e React, atendendo a todos os requisitos do desafio.
+Sistema completo de cadastro de pessoas desenvolvido com .NET 6 e React.
 
 ## 🚀 Funcionalidades
 
@@ -48,6 +48,7 @@ Sistema completo de cadastro de pessoas desenvolvido com .NET 6 e React, atenden
 - Swagger/OpenAPI
 - XUnit (Testes)
 - FluentAssertions
+- Docker
 - Moq
 
 ### Frontend
@@ -94,6 +95,35 @@ npm start
 ```
 
 O frontend estará disponível em: `http://localhost:3000`
+
+### 🐳 Docker (Recomendado para Deploy)
+
+Para rodar com Docker:
+
+```bash
+# Na raiz do projeto
+docker-compose up --build
+```
+
+Acesse:
+- Frontend: `http://localhost:3000`
+- Backend: `http://localhost:5000`
+- Swagger: `http://localhost:5000/swagger`
+
+📖 **Guia completo de Docker e Deploy**: Veja [DOCKER.md](./DOCKER.md)
+
+### 🚀 Script Rápido
+
+**Windows:**
+```bash
+run.bat
+```
+
+**Linux/Mac:**
+```bash
+chmod +x run.sh
+./run.sh
+```
 
 ## 🔐 Credenciais de Teste
 
