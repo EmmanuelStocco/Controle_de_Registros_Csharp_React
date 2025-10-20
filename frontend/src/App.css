@@ -208,9 +208,16 @@ fieldset legend {
 
 .form-actions {
   display: flex;
-  gap: 10px;
+  gap: 15px;
   justify-content: flex-end;
-  margin-top: 20px;
+  align-items: center;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.form-actions .btn {
+  min-width: 120px;
 }
 
 /* ==================== Pessoa List ==================== */
@@ -280,6 +287,18 @@ fieldset legend {
 
 .pessoa-table td {
   color: #333;
+}
+
+.pessoa-table td:last-child {
+  white-space: nowrap;
+}
+
+.pessoa-table .btn-sm {
+  margin-right: 8px;
+}
+
+.pessoa-table .btn-sm:last-child {
+  margin-right: 0;
 }
 
 /* ==================== Pessoa Form ==================== */

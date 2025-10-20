@@ -114,7 +114,6 @@ const PessoaList: React.FC<PessoaListProps> = ({ apiVersion }) => {
                     <button
                       className="btn btn-danger btn-sm"
                       onClick={() => handleDelete(pessoa.id)}
-                      style={{ marginLeft: '5px' }}
                     >
                       Excluir
                     </button>
