@@ -7,15 +7,9 @@ using PessoaAPI.Services;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Configurar URL para rodar na porta 5000 (HTTP) e 5001 (HTTPS)
-// HTTP como padrão para desenvolvimento (evita problemas com certificados SSL)
-builder.WebHost.UseUrls("http://localhost:5000", "https://localhost:5001");
-
-// Add services to the container.
+ 
+builder.WebHost.UseUrls("http://localhost:5000", "https://localhost:5001"); 
 builder.Services.AddControllers();
-
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -31,8 +25,7 @@ builder.Services.AddSwaggerGen(c =>
         Version = "v2",
         Description = "API para cadastro de pessoas - Versão 2 (com endereço obrigatório)"
     });
-
-    // Configuração para JWT no Swagger
+ 
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
@@ -58,11 +51,9 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-// Configuração do Entity Framework com InMemory Database (H2 equivalente)
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseInMemoryDatabase("PessoaDatabase"));
 
-// Configuração da versão da API (simplificada)
 builder.Services.AddApiVersioning(opt =>
 {
     opt.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
@@ -109,7 +100,7 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-// Habilitar Swagger em todos os ambientes (dev e prod)
+// Habilitei o Swagger em todos os ambientes (dev e prod)
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
@@ -117,7 +108,6 @@ app.UseSwaggerUI(c =>
     c.SwaggerEndpoint("/swagger/v2/swagger.json", "Pessoa API v2");
 });
 
-// CORS deve vir antes de UseHttpsRedirection para evitar problemas
 app.UseCors("AllowReactApp");
 
 // UseHttpsRedirection desabilitado para desenvolvimento (evita problemas com certificados SSL)
@@ -128,7 +118,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// Seed data para testes
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
