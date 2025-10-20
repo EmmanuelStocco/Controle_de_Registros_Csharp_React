@@ -31,15 +31,11 @@ namespace PessoaAPI.Models
         [StringLength(11, MinimumLength = 11, ErrorMessage = "CPF deve ter exatamente 11 dígitos")]
         public string CPF { get; set; } = string.Empty;
 
+        [StringLength(200, ErrorMessage = "Endereço deve ter no máximo 200 caracteres")]
+        public string? Endereco { get; set; }
+
         public DateTime DataCadastro { get; set; } = DateTime.Now;
         public DateTime DataAtualizacao { get; set; } = DateTime.Now;
-    }
-
-    public class PessoaV2 : Pessoa
-    {
-        [Required(ErrorMessage = "Endereço é obrigatório na versão 2")]
-        [StringLength(200, ErrorMessage = "Endereço deve ter no máximo 200 caracteres")]
-        public string Endereco { get; set; } = string.Empty;
     }
 }
 
