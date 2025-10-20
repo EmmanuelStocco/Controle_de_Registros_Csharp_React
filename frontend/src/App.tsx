@@ -10,25 +10,21 @@ import './App.css';
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [token, setToken] = useState<string | null>(null);
   const [apiVersion, setApiVersion] = useState<ApiVersion>('v1');
 
   useEffect(() => {
     const savedToken = localStorage.getItem('token');
     if (savedToken) {
-      setToken(savedToken);
       setIsAuthenticated(true);
     }
   }, []);
 
   const handleLogin = (newToken: string): void => {
-    setToken(newToken);
     setIsAuthenticated(true);
     localStorage.setItem('token', newToken);
   };
 
   const handleLogout = (): void => {
-    setToken(null);
     setIsAuthenticated(false);
     localStorage.removeItem('token');
   };
