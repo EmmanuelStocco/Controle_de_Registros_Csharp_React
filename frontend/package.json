@@ -46,6 +46,7 @@
     ]
   },
   "devDependencies": {
-    "@types/react-input-mask": "^3.0.6"
+    "@types/react-input-mask": "^3.0.6",
+    "cross-env": "^7.0.3"
   }
 }
