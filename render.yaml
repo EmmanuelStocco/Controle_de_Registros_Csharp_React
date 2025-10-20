@@ -27,5 +27,5 @@ services:
     staticPublishPath: ./frontend/build
     envVars:
       - key: REACT_APP_API_URL
-        value: https://pessoa-api.onrender.com
+        value: https://pessoa-api-production.up.railway.app/
 

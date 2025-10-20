@@ -229,3 +229,7 @@ Sistema desenvolvido, demonstrando conhecimento em:
 - API REST
 - Swagger/OpenAPI
 
+## Deploy
+O projeto foi hospedado na Railway, você pode testa-lo em:
+- API: `https://pessoa-api-production.up.railway.app/swagger/index.html`
+- Front: `https://pessoa-frontend-production.up.railway.app/`
