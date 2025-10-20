@@ -108,16 +108,11 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp", policy =>
     {
-        // Em produção, permite origens configuradas via variável de ambiente
-        var allowedOrigins = builder.Configuration.GetValue<string>("AllowedOrigins")
-            ?? "http://localhost:3000,https://localhost:3000";
-        
-        var origins = allowedOrigins.Split(',', StringSplitOptions.RemoveEmptyEntries);
-        
-        policy.WithOrigins(origins)
+        // Projeto de estudo: liberar CORS para qualquer origem (sem credenciais)
+        // Observação: AllowAnyOrigin é incompatível com AllowCredentials
+        policy.AllowAnyOrigin()
               .AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowCredentials();
+              .AllowAnyMethod();
     });
 });
 
