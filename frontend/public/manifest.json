@@ -1,0 +1,9 @@
+{
+  "short_name": "Pessoa App TS",
+  "name": "Sistema de Cadastro de Pessoas - TypeScript",
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
+
