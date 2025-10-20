@@ -8,8 +8,9 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configurar URL para rodar na porta 5001 com HTTPS
-builder.WebHost.UseUrls("https://localhost:5001", "http://localhost:5000");
+// Configurar URL para rodar na porta 5000 (HTTP) e 5001 (HTTPS)
+// HTTP como padrão para desenvolvimento (evita problemas com certificados SSL)
+builder.WebHost.UseUrls("http://localhost:5000", "https://localhost:5001");
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -119,7 +120,8 @@ app.UseSwaggerUI(c =>
 // CORS deve vir antes de UseHttpsRedirection para evitar problemas
 app.UseCors("AllowReactApp");
 
-app.UseHttpsRedirection();
+// UseHttpsRedirection desabilitado para desenvolvimento (evita problemas com certificados SSL)
+// app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
