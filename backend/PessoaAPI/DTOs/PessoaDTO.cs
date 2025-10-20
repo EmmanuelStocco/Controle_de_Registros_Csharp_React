@@ -26,6 +26,9 @@ namespace PessoaAPI.DTOs
         [Required(ErrorMessage = "CPF é obrigatório")]
         [StringLength(11, MinimumLength = 11, ErrorMessage = "CPF deve ter exatamente 11 dígitos")]
         public string CPF { get; set; } = string.Empty;
+
+        [StringLength(200, ErrorMessage = "Endereço deve ter no máximo 200 caracteres")]
+        public string? Endereco { get; set; }
     }
 
     public class PessoaUpdateDTO
@@ -52,6 +55,9 @@ namespace PessoaAPI.DTOs
         [Required(ErrorMessage = "CPF é obrigatório")]
         [StringLength(11, MinimumLength = 11, ErrorMessage = "CPF deve ter exatamente 11 dígitos")]
         public string CPF { get; set; } = string.Empty;
+
+        [StringLength(200, ErrorMessage = "Endereço deve ter no máximo 200 caracteres")]
+        public string? Endereco { get; set; }
     }
 
     public class PessoaResponseDTO
@@ -64,28 +70,12 @@ namespace PessoaAPI.DTOs
         public string? Naturalidade { get; set; }
         public string? Nacionalidade { get; set; }
         public string CPF { get; set; } = string.Empty;
+        public string? Endereco { get; set; }
         public DateTime DataCadastro { get; set; }
         public DateTime DataAtualizacao { get; set; }
     }
 
-    public class PessoaV2CreateDTO : PessoaCreateDTO
-    {
-        [Required(ErrorMessage = "Endereço é obrigatório na versão 2")]
-        [StringLength(200, ErrorMessage = "Endereço deve ter no máximo 200 caracteres")]
-        public string Endereco { get; set; } = string.Empty;
-    }
-
-    public class PessoaV2UpdateDTO : PessoaUpdateDTO
-    {
-        [Required(ErrorMessage = "Endereço é obrigatório na versão 2")]
-        [StringLength(200, ErrorMessage = "Endereço deve ter no máximo 200 caracteres")]
-        public string Endereco { get; set; } = string.Empty;
-    }
-
-    public class PessoaV2ResponseDTO : PessoaResponseDTO
-    {
-        public string Endereco { get; set; } = string.Empty;
-    }
+    // V2 usa os mesmos DTOs, mas valida que Endereco não é vazio no controller
 
     public class LoginDTO
     {
