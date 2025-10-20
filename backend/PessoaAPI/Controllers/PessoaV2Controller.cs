@@ -10,7 +10,7 @@ namespace PessoaAPI.Controllers
 {
     [ApiController]
     [ApiVersion("2.0")]
-    [Route("api/v{version:apiVersion}/[controller]")]
+    [Route("api/v{version:apiVersion}/pessoa")]
     [Authorize]
     public class PessoaV2Controller : ControllerBase
     {
@@ -22,10 +22,10 @@ namespace PessoaAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PessoaV2ResponseDTO>>> GetPessoas()
+        public async Task<ActionResult<IEnumerable<PessoaResponseDTO>>> GetPessoas()
         {
-            var pessoas = await _context.PessoasV2.ToListAsync();
-            return Ok(pessoas.Select(p => new PessoaV2ResponseDTO
+            var pessoas = await _context.Pessoas.ToListAsync();
+            return Ok(pessoas.Select(p => new PessoaResponseDTO
             {
                 Id = p.Id,
                 Nome = p.Nome,
@@ -42,16 +42,16 @@ namespace PessoaAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<PessoaV2ResponseDTO>> GetPessoa(int id)
+        public async Task<ActionResult<PessoaResponseDTO>> GetPessoa(int id)
         {
-            var pessoa = await _context.PessoasV2.FindAsync(id);
+            var pessoa = await _context.Pessoas.FindAsync(id);
 
             if (pessoa == null)
             {
                 return NotFound();
             }
 
-            return Ok(new PessoaV2ResponseDTO
+            return Ok(new PessoaResponseDTO
             {
                 Id = pessoa.Id,
                 Nome = pessoa.Nome,
@@ -68,11 +68,17 @@ namespace PessoaAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<PessoaV2ResponseDTO>> CreatePessoa([FromBody] PessoaV2CreateDTO pessoaDTO)
+        public async Task<ActionResult<PessoaResponseDTO>> CreatePessoa([FromBody] PessoaCreateDTO pessoaDTO)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
+            }
+
+            // v2: Validar que endereço não está vazio
+            if (string.IsNullOrWhiteSpace(pessoaDTO.Endereco))
+            {
+                return BadRequest(new { message = "Endereço é obrigatório na API v2" });
             }
 
             // Validação de CPF
@@ -82,7 +88,7 @@ namespace PessoaAPI.Controllers
             }
 
             // Verificar se CPF já existe
-            var cpfExists = await _context.PessoasV2.AnyAsync(p => p.CPF == pessoaDTO.CPF);
+            var cpfExists = await _context.Pessoas.AnyAsync(p => p.CPF == pessoaDTO.CPF);
             if (cpfExists)
             {
                 return BadRequest(new { message = "CPF já cadastrado" });
@@ -91,14 +97,14 @@ namespace PessoaAPI.Controllers
             // Verificar se email já existe (se preenchido)
             if (!string.IsNullOrEmpty(pessoaDTO.Email))
             {
-                var emailExists = await _context.PessoasV2.AnyAsync(p => p.Email == pessoaDTO.Email);
+                var emailExists = await _context.Pessoas.AnyAsync(p => p.Email == pessoaDTO.Email);
                 if (emailExists)
                 {
                     return BadRequest(new { message = "Email já cadastrado" });
                 }
             }
 
-            var pessoa = new PessoaV2
+            var pessoa = new Pessoa
             {
                 Nome = pessoaDTO.Nome,
                 Sexo = pessoaDTO.Sexo,
@@ -107,15 +113,15 @@ namespace PessoaAPI.Controllers
                 Naturalidade = pessoaDTO.Naturalidade,
                 Nacionalidade = pessoaDTO.Nacionalidade,
                 CPF = pessoaDTO.CPF,
-                Endereco = pessoaDTO.Endereco,
+                Endereco = pessoaDTO.Endereco, // v2: endereço obrigatório (já validado acima)
                 DataCadastro = DateTime.Now,
                 DataAtualizacao = DateTime.Now
             };
 
-            _context.PessoasV2.Add(pessoa);
+            _context.Pessoas.Add(pessoa);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetPessoa), new { id = pessoa.Id }, new PessoaV2ResponseDTO
+            return CreatedAtAction(nameof(GetPessoa), new { id = pessoa.Id }, new PessoaResponseDTO
             {
                 Id = pessoa.Id,
                 Nome = pessoa.Nome,
@@ -132,14 +138,20 @@ namespace PessoaAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdatePessoa(int id, [FromBody] PessoaV2UpdateDTO pessoaDTO)
+        public async Task<IActionResult> UpdatePessoa(int id, [FromBody] PessoaUpdateDTO pessoaDTO)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var pessoa = await _context.PessoasV2.FindAsync(id);
+            // v2: Validar que endereço não está vazio
+            if (string.IsNullOrWhiteSpace(pessoaDTO.Endereco))
+            {
+                return BadRequest(new { message = "Endereço é obrigatório na API v2" });
+            }
+
+            var pessoa = await _context.Pessoas.FindAsync(id);
             if (pessoa == null)
             {
                 return NotFound();
@@ -152,7 +164,7 @@ namespace PessoaAPI.Controllers
             }
 
             // Verificar se CPF já existe em outro registro
-            var cpfExists = await _context.PessoasV2.AnyAsync(p => p.CPF == pessoaDTO.CPF && p.Id != id);
+            var cpfExists = await _context.Pessoas.AnyAsync(p => p.CPF == pessoaDTO.CPF && p.Id != id);
             if (cpfExists)
             {
                 return BadRequest(new { message = "CPF já cadastrado" });
@@ -161,7 +173,7 @@ namespace PessoaAPI.Controllers
             // Verificar se email já existe em outro registro (se preenchido)
             if (!string.IsNullOrEmpty(pessoaDTO.Email))
             {
-                var emailExists = await _context.PessoasV2.AnyAsync(p => p.Email == pessoaDTO.Email && p.Id != id);
+                var emailExists = await _context.Pessoas.AnyAsync(p => p.Email == pessoaDTO.Email && p.Id != id);
                 if (emailExists)
                 {
                     return BadRequest(new { message = "Email já cadastrado" });
@@ -186,13 +198,13 @@ namespace PessoaAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePessoa(int id)
         {
-            var pessoa = await _context.PessoasV2.FindAsync(id);
+            var pessoa = await _context.Pessoas.FindAsync(id);
             if (pessoa == null)
             {
                 return NotFound();
             }
 
-            _context.PessoasV2.Remove(pessoa);
+            _context.Pessoas.Remove(pessoa);
             await _context.SaveChangesAsync();
 
             return NoContent();
