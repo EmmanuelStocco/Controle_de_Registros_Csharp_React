@@ -10,7 +10,7 @@ namespace PessoaAPI.Controllers
 {
     [ApiController]
     [ApiVersion("1.0")]
-    [Route("api/v{version:apiVersion}/[controller]")]
+    [Route("api/v{version:apiVersion}/pessoa")]
     [Authorize]
     public class PessoaController : ControllerBase
     {
@@ -35,6 +35,7 @@ namespace PessoaAPI.Controllers
                 Naturalidade = p.Naturalidade,
                 Nacionalidade = p.Nacionalidade,
                 CPF = CPFValidationService.FormatCPF(p.CPF),
+                Endereco = p.Endereco,
                 DataCadastro = p.DataCadastro,
                 DataAtualizacao = p.DataAtualizacao
             }));
@@ -60,6 +61,7 @@ namespace PessoaAPI.Controllers
                 Naturalidade = pessoa.Naturalidade,
                 Nacionalidade = pessoa.Nacionalidade,
                 CPF = CPFValidationService.FormatCPF(pessoa.CPF),
+                Endereco = pessoa.Endereco,
                 DataCadastro = pessoa.DataCadastro,
                 DataAtualizacao = pessoa.DataAtualizacao
             });
@@ -105,6 +107,7 @@ namespace PessoaAPI.Controllers
                 Naturalidade = pessoaDTO.Naturalidade,
                 Nacionalidade = pessoaDTO.Nacionalidade,
                 CPF = pessoaDTO.CPF,
+                Endereco = string.IsNullOrWhiteSpace(pessoaDTO.Endereco) ? null : pessoaDTO.Endereco, // v1: endereço opcional
                 DataCadastro = DateTime.Now,
                 DataAtualizacao = DateTime.Now
             };
@@ -171,6 +174,7 @@ namespace PessoaAPI.Controllers
             pessoa.Naturalidade = pessoaDTO.Naturalidade;
             pessoa.Nacionalidade = pessoaDTO.Nacionalidade;
             pessoa.CPF = pessoaDTO.CPF;
+            pessoa.Endereco = string.IsNullOrWhiteSpace(pessoaDTO.Endereco) ? null : pessoaDTO.Endereco; // v1: endereço opcional
             pessoa.DataAtualizacao = DateTime.Now;
 
             await _context.SaveChangesAsync();
