@@ -11,7 +11,7 @@ services:
       - key: ASPNETCORE_URLS
         value: http://+:80
       - key: AllowedOrigins
-        value: https://pessoa-frontend.onrender.com
+        value: https://pessoa-frontend-production.up.railway.app
       - key: Jwt__Key
         generateValue: true
       - key: Jwt__Issuer
@@ -27,5 +27,5 @@ services:
     staticPublishPath: ./frontend/build
     envVars:
       - key: REACT_APP_API_URL
-        value: https://pessoa-api-production.up.railway.app/
+        value: https://pessoa-api-production.up.railway.app
 
