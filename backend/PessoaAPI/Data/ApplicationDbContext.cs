@@ -10,7 +10,6 @@ namespace PessoaAPI.Data
         }
 
         public DbSet<Pessoa> Pessoas { get; set; } = null!;
-        public DbSet<PessoaV2> PessoasV2 { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -21,17 +20,8 @@ namespace PessoaAPI.Data
                 .HasIndex(p => p.CPF)
                 .IsUnique();
 
-            modelBuilder.Entity<PessoaV2>()
-                .HasIndex(p => p.CPF)
-                .IsUnique();
-
             // Configuração para email único (quando preenchido)
             modelBuilder.Entity<Pessoa>()
-                .HasIndex(p => p.Email)
-                .IsUnique()
-                .HasFilter("[Email] IS NOT NULL");
-
-            modelBuilder.Entity<PessoaV2>()
                 .HasIndex(p => p.Email)
                 .IsUnique()
                 .HasFilter("[Email] IS NOT NULL");
